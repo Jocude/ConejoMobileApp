@@ -82,7 +82,7 @@ public class GameView extends View {
     protected  void onDraw(Canvas canvas){
         super.onDraw(canvas);
         canvas.drawBitmap(background,null,rectBackground,null);
-        canvas.drawBitmap(ground,null,rectBackground,null);
+        canvas.drawBitmap(ground,null,rectGround,null);
         canvas.drawBitmap(rabbit,rabbitX,rabbitY,null);
         for(int i = 0;i<spikes.size();i++){
             canvas.drawBitmap(spikes.get(i).getSpike(spikes.get(i).spikeFrame),spikes.get(i).spikeX,spikes.get(i).spikeY,null);
@@ -161,6 +161,7 @@ public class GameView extends View {
         return true;
     }
 }
+
 
 
 

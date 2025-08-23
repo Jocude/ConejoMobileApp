@@ -27,8 +27,8 @@ public class Spike {
     }
     public void resetPosition(){
         spikeX = random.nextInt(GameView.dWidth - getSpikeWidth());
-        spikeY = -200 + random.nextInt(600)* -1;
-        spikeVelocity = 5 *random.nextInt(16);
+        spikeY = -100 + random.nextInt(200)* -1;
+        spikeVelocity = 15 *(random.nextInt(16)) + 1;
 
     }
 
