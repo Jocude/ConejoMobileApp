@@ -1,1 +1,6 @@
-*.html linguist-detectable=false
+**/build/* linguist-generated=true
+.gradle/* linguist-generated=true
+.idea/* linguist-generated=true
+
+*.kt linguist-language=Kotlin
+*.java linguist-language=Java
