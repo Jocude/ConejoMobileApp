@@ -63,13 +63,14 @@ class GameView(context: Context) : View(context), Choreographer.FrameCallback {
     // --- Pinceles ---
     private val spritePaint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
     private val groundFillPaint = Paint().apply { color = sprites.groundFillColor }
+    private val gameFont: Typeface = resources.getFont(R.font.fredoka_bold)
     private val scoreFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(255, 165, 0)
-        typeface = Typeface.DEFAULT_BOLD
+        color = Color.rgb(255, 209, 102)
+        typeface = gameFont
     }
     private val scoreStroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(90, 50, 20)
-        typeface = Typeface.DEFAULT_BOLD
+        color = Color.rgb(59, 42, 63)
+        typeface = gameFont
         style = Paint.Style.STROKE
     }
     private val lifeSlotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(110, 0, 0, 0) }
@@ -80,7 +81,7 @@ class GameView(context: Context) : View(context), Choreographer.FrameCallback {
     private val overlayText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         textAlign = Paint.Align.CENTER
-        typeface = Typeface.DEFAULT_BOLD
+        typeface = gameFont
     }
     private val rect = RectF()
 
@@ -111,8 +112,8 @@ class GameView(context: Context) : View(context), Choreographer.FrameCallback {
         unit = screenWidth / REFERENCE_WIDTH
         scoreFill.textSize = SCORE_TEXT_SIZE * unit
         scoreStroke.textSize = SCORE_TEXT_SIZE * unit
-        scoreStroke.strokeWidth = 3f * unit
-        groundTop = screenHeight - insetBottom - sprites.ground.height * unit
+        scoreStroke.strokeWidth = 5f * unit
+        groundTop = screenHeight - insetBottom - GameSprites.GROUND_HEIGHT * unit
         rabbitY = groundTop - rabbitHeight
         if (!sceneReady) {
             rabbitX = (screenWidth - rabbitWidth) / 2f
@@ -123,10 +124,10 @@ class GameView(context: Context) : View(context), Choreographer.FrameCallback {
         }
     }
 
-    private val rabbitWidth get() = sprites.rabbit.width * unit
-    private val rabbitHeight get() = sprites.rabbit.height * unit
-    private val spikeWidth get() = sprites.spikeFrames[0].width * unit
-    private val spikeHeight get() = sprites.spikeFrames[0].height * unit
+    private val rabbitWidth get() = GameSprites.RABBIT_WIDTH * unit
+    private val rabbitHeight get() = GameSprites.RABBIT_HEIGHT * unit
+    private val spikeWidth get() = GameSprites.SPIKE_SIZE * unit
+    private val spikeHeight get() = GameSprites.SPIKE_SIZE * unit
     private val maxRabbitX get() = (screenWidth - rabbitWidth).coerceAtLeast(0f)
 
     private fun newSpike() = Spike(random).also { resetSpike(it) }
@@ -258,16 +259,20 @@ class GameView(context: Context) : View(context), Choreographer.FrameCallback {
         if (!sceneReady) return
         drawBackground(canvas)
         drawGround(canvas)
-        drawSprite(canvas, sprites.rabbit, rabbitX, rabbitY)
-        for (spike in spikes) drawSprite(canvas, sprites.spikeFrames[spike.frame], spike.x, spike.y)
-        for (explosion in explosions) drawSprite(canvas, sprites.explosionFrames[explosion.frame], explosion.x, explosion.y)
+        drawSprite(canvas, sprites.rabbit, rabbitX, rabbitY, rabbitWidth, rabbitHeight)
+        for (spike in spikes) drawSprite(canvas, sprites.spikeFrames[spike.frame], spike.x, spike.y, spikeWidth, spikeHeight)
+        val explosionWidth = GameSprites.EXPLOSION_WIDTH * unit
+        val explosionHeight = GameSprites.EXPLOSION_HEIGHT * unit
+        for (explosion in explosions) {
+            drawSprite(canvas, sprites.explosionFrames[explosion.frame], explosion.x, explosion.y, explosionWidth, explosionHeight)
+        }
         drawHud(canvas)
         if (paused) drawPauseOverlay(canvas)
     }
 
-    /** Dibuja un sprite escalado a [unit] con suavizado. */
-    private fun drawSprite(canvas: Canvas, bitmap: Bitmap, x: Float, y: Float) {
-        rect.set(x, y, x + bitmap.width * unit, y + bitmap.height * unit)
+    /** Dibuja un sprite con el tamaño indicado (en píxeles de pantalla) y suavizado. */
+    private fun drawSprite(canvas: Canvas, bitmap: Bitmap, x: Float, y: Float, width: Float, height: Float) {
+        rect.set(x, y, x + width, y + height)
         canvas.drawBitmap(bitmap, null, rect, spritePaint)
     }
 
@@ -284,9 +289,9 @@ class GameView(context: Context) : View(context), Choreographer.FrameCallback {
     /** Suelo repetido a lo ancho (sin estirarse) y relleno por debajo, detrás de la barra de navegación. */
     private fun drawGround(canvas: Canvas) {
         val tile = sprites.groundTile
-        val tileWidth = tile.width() * unit
-        val tileHeight = tile.height() * unit
-        // El relleno empieza antes del final del suelo porque sus últimas filas son transparentes
+        val tileWidth = GameSprites.GROUND_TILE_WIDTH * unit
+        val tileHeight = GameSprites.GROUND_HEIGHT * unit
+        // El relleno empieza algo antes del final del suelo para que no quede ninguna rendija entre ambos
         canvas.drawRect(0f, groundTop + tileHeight * 0.75f, screenWidth.toFloat(), screenHeight.toFloat(), groundFillPaint)
         var x = 0f
         while (x < screenWidth) {

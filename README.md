@@ -59,7 +59,8 @@ ConejoMobileApp/
 │   │   │   │   └── GameOver.kt           # Pantalla de resultados y récord
 │   │   │   ├── res/
 │   │   │   │   ├── layout/               # activity_main.xml, game_over.xml
-│   │   │   │   ├── drawable/             # Sprites: conejo, picos, explosiones, fondo, suelo…
+│   │   │   │   ├── drawable-nodpi/       # Sprites en alta resolución: conejo, picos, explosiones, fondo, suelo…
+│   │   │   │   ├── font/                 # Fredoka Bold (marcador y textos)
 │   │   │   │   ├── raw/                  # Sonidos (golpe, pop, Game Over)
 │   │   │   │   └── values/, values-en/   # Textos en español e inglés
 │   │   │   └── AndroidManifest.xml
@@ -67,7 +68,8 @@ ConejoMobileApp/
 │   ├── build.gradle.kts
 │   └── settings.gradle.kts
 └── Documentacion/
-    └── Memoria-JuegoDelConejo.pdf        # Memoria técnica del proyecto
+    ├── Memoria-JuegoDelConejo.pdf        # Memoria técnica del proyecto
+    └── arte/generar_imagenes.py          # Genera todas las imágenes y el icono
 ```
 
 ### Clases principales
@@ -83,7 +85,7 @@ Núcleo del juego. Extiende `View` y usa `Canvas`. El bucle va con `Choreographe
 Todo se escala según el ancho de la pantalla, así que el juego se ve igual en cualquier móvil. Además detecta las colisiones, gestiona las vidas, la pausa y el control táctil, y respeta las barras del sistema (el suelo queda por encima de la barra de navegación).
 
 #### `GameSprites.kt`
-Carga todas las imágenes una sola vez por partida; las comparten todos los picos y explosiones.
+Carga todas las imágenes una sola vez por partida; las comparten todos los picos y explosiones. También fija el tamaño de diseño de cada sprite, así que se pueden cambiar las imágenes por otras de más resolución sin tocar la jugabilidad.
 
 #### `Difficulty.kt`
 Calcula cuántos picos caen y a qué velocidad según la puntuación.
@@ -144,6 +146,18 @@ keyAlias=conejojorge
 keyPassword=...
 ```
 Sin ese fichero, la release se genera sin firmar.
+
+---
+
+## 🎨 Gráficos
+
+Todas las imágenes (sprites, fondo, título, botones e icono) se generan con código, en estilo plano y con el mismo contorno, mediante `Documentacion/arte/generar_imagenes.py` (Python con pycairo y Pillow). Para retocarlas, se cambia el script y se vuelve a ejecutar:
+
+```bash
+python3 Documentacion/arte/generar_imagenes.py ConejoJorge/app/src/main/res
+```
+
+La tipografía es [Fredoka](https://fonts.google.com/specimen/Fredoka), con licencia SIL Open Font License (`Documentacion/arte/fuentes/OFL.txt`).
 
 ---
 

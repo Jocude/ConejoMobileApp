@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:background="#e7dfc2"
+    android:background="@drawable/background"
     android:gravity="center">
   <ImageView
       android:layout_width="300dp"
@@ -17,8 +17,8 @@
       android:contentDescription="@string/game_title"
       app:srcCompat ="@drawable/game_title"/>
   <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="124dp"
+      android:layout_height="160dp"
       android:contentDescription="@string/rabbit"
       app:srcCompat = "@drawable/rabbit"
       android:layout_marginTop="40dp"
@@ -30,11 +30,10 @@
       android:text="@string/start"
       android:textSize="32sp"
       android:textColor="@color/white"
-      android:backgroundTint="#bb8044"
+      android:fontFamily="@font/fredoka_bold"
+      android:paddingHorizontal="32dp"
+      android:backgroundTint="#e76f51"
       android:onClick="startGame"
       android:layout_gravity="center" />
-
-      <!--android:fontFamily="@font/kenney_blocks"-->
-
 
   </LinearLayout>
