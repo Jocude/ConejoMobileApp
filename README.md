@@ -3,6 +3,7 @@
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
 ![API Level](https://img.shields.io/badge/API_29%2B-blue?style=for-the-badge)
+[![CI](https://github.com/Jocude/ConejoMobileApp/actions/workflows/ci.yml/badge.svg)](https://github.com/Jocude/ConejoMobileApp/actions/workflows/ci.yml)
 
 **Conejo Jorge** es un videojuego de acción para Android en el que controlas a un conejo que debe esquivar picos que caen desde arriba. ¡Sobrevive el mayor tiempo posible, acumula puntos y supera tu récord!
 
@@ -16,7 +17,9 @@ Descarga el APK desde la sección [**Releases**](https://github.com/Jocude/Conej
 
 ## 📱 Capturas de pantalla
 
-> _El juego presenta una pantalla principal con el logo del juego y un botón de inicio, seguida del tablero de juego y una pantalla de Game Over con tu puntuación y el récord personal._
+| Inicio | Partida | Salir de la partida | Game Over |
+|:---:|:---:|:---:|:---:|
+| <img src="Documentacion/capturas/1-inicio.png" width="180" alt="Pantalla de inicio"/> | <img src="Documentacion/capturas/2-partida.png" width="180" alt="Partida en curso"/> | <img src="Documentacion/capturas/3-salir.png" width="180" alt="Diálogo para salir de la partida"/> | <img src="Documentacion/capturas/4-game-over.png" width="180" alt="Pantalla de Game Over"/> |
 
 ---
 
@@ -101,11 +104,12 @@ Actividad que recibe la puntuación final vía `Intent`, la muestra junto al ré
 
 ## ⚙️ Requisitos
 
-- **Android Studio** Hedgehog o superior
-- **Android SDK** API 34 (compileSdk)
-- **Mínimo Android** API 29 (Android 10)
+- **Android Studio** reciente (compatible con AGP 9.4)
 - **JDK** 17
-- **Kotlin** 1.9 (plugin `kotlin-android`)
+- **Android SDK**: compila contra la API 37 y apunta (`targetSdk`) a la API 36
+- **Mínimo Android** API 29 (Android 10)
+- **Gradle** 9.8 (incluido con el wrapper `./gradlew`)
+- **Kotlin**: integrado en AGP 9, no necesita plugin aparte
 
 ---
 
@@ -124,12 +128,34 @@ cd ConejoMobileApp/ConejoJorge
 ### 3. Ejecuta la aplicación
 - Conecta un dispositivo físico Android (API 29+) o crea un emulador desde el **AVD Manager**.
 - Pulsa el botón ▶ **Run 'app'** o usa el atajo `Shift + F10`.
+- La versión de pruebas se instala como `com.jocude.conejojorge.debug`, así que puede convivir con la de Play Store.
 
-### 4. Generar APK de release
+### 4. Versión de release firmada
 ```bash
-./gradlew assembleRelease
+./gradlew assembleRelease bundleRelease
 ```
-El APK generado se encontrará en `app/build/outputs/apk/release/`. Los APK no se guardan en el repositorio: se publican en [Releases](https://github.com/Jocude/ConejoMobileApp/releases).
+Genera el APK (`app/build/outputs/apk/release/`) y el AAB para Google Play (`app/build/outputs/bundle/release/`), reducidos con R8.
+
+La clave de firma **no está en el repositorio**. En local se lee de `~/.config/conejojorge/keystore.properties` (o de la ruta en `CONEJO_KEYSTORE_PROPERTIES`):
+```properties
+storeFile=/ruta/a/conejojorge-release.jks
+storePassword=...
+keyAlias=conejojorge
+keyPassword=...
+```
+Sin ese fichero, la release se genera sin firmar.
+
+---
+
+## 🔄 Integración continua y releases
+
+- **CI** (`.github/workflows/ci.yml`): en cada push a `main` y en cada pull request compila, pasa los tests unitarios y lint. Los informes y el APK de pruebas quedan como artefactos del workflow.
+- **Release** (`.github/workflows/release.yml`): al subir un tag `vX.Y` genera el APK y el AAB firmados y los publica en [Releases](https://github.com/Jocude/ConejoMobileApp/releases).
+
+```bash
+git tag v1.2 && git push origin v1.2
+```
+La clave se guarda en los secretos del repositorio (`CONEJO_KEYSTORE_BASE64`, `CONEJO_STORE_PASSWORD`, `CONEJO_KEY_ALIAS`, `CONEJO_KEY_PASSWORD`).
 
 ---
 
@@ -155,7 +181,6 @@ El APK generado se encontrará en `app/build/outputs/apk/release/`. Los APK no s
 | `androidx.appcompat:appcompat` | Compatibilidad de Activities |
 | `com.google.android.material:material` | Componentes Material Design |
 | `androidx.activity:activity` | Ciclo de vida de actividades |
-| `androidx.constraintlayout:constraintlayout` | Layouts de UI |
 | `junit:junit` | Tests unitarios |
 | `androidx.test.ext:junit` | Extensión JUnit para Android |
 | `androidx.test.espresso:espresso-core` | Tests de UI |
