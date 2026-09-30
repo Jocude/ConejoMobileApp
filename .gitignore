@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+
+# Configuración local de cada equipo (ruta del SDK)
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+.DS_Store
+
+# Artefactos generados: los APK se publican en GitHub Releases
+*.apk
+*.aab
+*.dm
+output-metadata.json
+
+# Claves de firma
+*.jks
+*.keystore
+keystore.properties
