@@ -1,93 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Pantalla de Game Over: título, récord (si lo hay), tarjeta con las puntuaciones y botones grandes debajo. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="@drawable/background"
+    android:fitsSystemWindows="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingBottom="64dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/fredoka_bold"
+        android:gravity="center"
+        android:shadowColor="#3B2A3F"
+        android:shadowDx="0"
+        android:shadowDy="6"
+        android:shadowRadius="1"
+        android:text="@string/game_over"
+        android:textColor="#FF8FAB"
+        android:textSize="44sp" />
+
+    <!-- Solo se muestra al batir el récord -->
+    <LinearLayout
+        android:id="@+id/newHighest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="132dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/new_highest" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/fredoka_bold"
+            android:text="@string/new_record"
+            android:textColor="#E76F51"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <!-- Tarjeta con la puntuación de la partida y el récord -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageButton
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="12dp"
-            android:background="@drawable/restart"
-            android:contentDescription="@string/restart"
-            android:onClick="restart"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-        <ImageButton
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="12dp"
-            android:background="@drawable/exit"
-            android:contentDescription="@string/exit"
-            android:onClick="exit"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/score_card"
         android:gravity="center"
-        android:orientation="vertical">
-        <ImageView
-            android:layout_width="140dp"
-            android:layout_height="154dp"
-            android:id="@+id/ivNewHighest"
-            android:src="@drawable/new_highest"
-            android:contentDescription="@string/new_record"
-            android:visibility="gone"/>
-        <TableLayout
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="20dp">
+
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TableRow
-                android:layout_width="wrap_content"
-                android:gravity="center">
-                <TextView
-                    android:fontFamily="@font/fredoka_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/score"
-                    android:textColor="#5D4037"
-                    android:textSize="24sp"/>
-                <TextView
-                    android:fontFamily="@font/fredoka_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvPoints"
-                    tools:text="50"
-                    android:textSize="50sp"
-                    android:textColor="@android:color/holo_green_dark"/>
-            </TableRow>
-        <TableRow android:layout_width="match_parent"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/fredoka_bold"
+            android:text="@string/score"
+            android:textColor="#5D4037"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/fredoka_bold"
+            android:textColor="#2D9A63"
+            android:textSize="64sp"
+            tools:text="120" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="12dp"
+            android:background="#1F3B2A3F" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
             <TextView
-                    android:fontFamily="@font/fredoka_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_bold"
                 android:text="@string/highest"
                 android:textColor="#5D4037"
-                android:textSize="24sp"
-                android:layout_gravity="center|right"/>
+                android:textSize="20sp" />
+
             <TextView
-                    android:fontFamily="@font/fredoka_bold"
+                android:id="@+id/tvHighest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvHighest"
-                tools:text="100"
-                android:textSize="24sp"
-                android:textColor="@android:color/holo_orange_dark"/>
-            </TableRow>
-        </TableLayout>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="80dp"/>
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/fredoka_bold"
+                android:textColor="#E76F51"
+                android:textSize="32sp"
+                tools:text="1360" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Botones grandes con su texto debajo -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:background="@drawable/restart"
+                android:contentDescription="@string/restart"
+                android:onClick="restart" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/fredoka_bold"
+                android:importantForAccessibility="no"
+                android:text="@string/restart"
+                android:textColor="#3B2A3F"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:background="@drawable/exit"
+                android:contentDescription="@string/exit"
+                android:onClick="exit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/fredoka_bold"
+                android:importantForAccessibility="no"
+                android:text="@string/exit"
+                android:textColor="#3B2A3F"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
-
-
-

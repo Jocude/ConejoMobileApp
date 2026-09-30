@@ -12,8 +12,9 @@
     <string name="exit_game_confirm">Quit</string>
     <string name="exit_game_cancel">Keep playing</string>
 
-    <string name="score">Score:</string>
-    <string name="highest">High score:</string>
+    <string name="game_over">Game over!</string>
+    <string name="score">Score</string>
+    <string name="highest">Best</string>
     <string name="new_record">New high score!</string>
     <string name="restart">Play again</string>
     <string name="exit">Exit</string>

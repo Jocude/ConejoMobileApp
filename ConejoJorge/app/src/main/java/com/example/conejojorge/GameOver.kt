@@ -4,7 +4,6 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +20,7 @@ class GameOver : AppCompatActivity() {
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         var highest = prefs.getInt(KEY_HIGHEST, 0)
         if (points > highest) {
-            findViewById<ImageView>(R.id.ivNewHighest).visibility = View.VISIBLE
+            findViewById<View>(R.id.newHighest).visibility = View.VISIBLE
             highest = points
             prefs.edit { putInt(KEY_HIGHEST, highest) }
         }
