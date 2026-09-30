@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 public class Explosion {
     Bitmap[] explosion = new Bitmap[3];
     int explosionFrame = 0;
-    int explosionX, explosionY;
+    float explosionX, explosionY;
 
     public Explosion(Context context){
         explosion[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.explode0);

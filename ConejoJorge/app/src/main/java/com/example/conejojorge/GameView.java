@@ -27,6 +27,10 @@ public class GameView extends View {
     Context context;
     Handler handler;
     final long UPDATE_MILIS = 30;
+    // Paso máximo de simulación: si el móvil se atasca, evita que los pinchos den un salto enorme
+    final float MAX_DELTA_SECONDS = 0.05f;
+    long lastFrameNanos = 0;
+    boolean gameOver = false;
     Runnable runnable;
     Paint textPaint = new Paint();
     Paint healthPaint = new Paint();
@@ -84,37 +88,50 @@ public class GameView extends View {
         canvas.drawBitmap(background,null,rectBackground,null);
         canvas.drawBitmap(ground,null,rectGround,null);
         canvas.drawBitmap(rabbit,rabbitX,rabbitY,null);
-        for(int i = 0;i<spikes.size();i++){
-            canvas.drawBitmap(spikes.get(i).getSpike(spikes.get(i).spikeFrame),spikes.get(i).spikeX,spikes.get(i).spikeY,null);
-            spikes.get(i).spikeFrame++;
-            if (spikes.get(i).spikeFrame > 2){
-                spikes.get(i).spikeFrame = 0;
-            }
-            spikes.get(i).spikeY += spikes.get(i).spikeVelocity;
-            if (spikes.get(i).spikeY + spikes.get(i).getSpikeHeight()>=dHeight - ground.getHeight()){
-                points += 10;
-                Explosion explosion = new Explosion(context);
-                explosion.explosionX = spikes.get(i).spikeX;
-                explosion.explosionY = spikes.get(i).spikeY;
-                explosions.add(explosion);
-                spikes.get(i).resetPosition();
 
+        // Tiempo real transcurrido desde el frame anterior, para que la velocidad no dependa del móvil
+        long now = System.nanoTime();
+        float deltaSeconds = lastFrameNanos == 0 ? 0 : (now - lastFrameNanos) / 1_000_000_000f;
+        deltaSeconds = Math.min(deltaSeconds, MAX_DELTA_SECONDS);
+        lastFrameNanos = now;
+
+        for(int i = 0;i<spikes.size();i++){
+            Spike spike = spikes.get(i);
+            canvas.drawBitmap(spike.getSpike(spike.spikeFrame),spike.spikeX,spike.spikeY,null);
+            spike.spikeFrame++;
+            if (spike.spikeFrame > 2){
+                spike.spikeFrame = 0;
             }
-        }
-        for (int i = 0; i < spikes.size(); i++){
-            if (spikes.get(i).spikeX + spikes.get(i).getSpikeWidth()>= rabbitX &&
-                    spikes.get(i).spikeX <= rabbitX+ rabbit.getWidth() &&
-                    spikes.get(i).spikeY  + spikes.get(i).getSpikeWidth()>= rabbitY &&
-                    spikes.get(i).spikeY + spikes.get(i).getSpikeWidth() <= rabbitY+rabbit.getHeight() )
-            {
-                life --;
-                spikes.get(i).resetPosition();
-                if (life == 0){
+            if (gameOver){
+                continue;
+            }
+            float previousY = spike.spikeY;
+            spike.spikeY += spike.spikeVelocity * deltaSeconds;
+
+            // Se comprueba todo el tramo recorrido en este frame (desde previousY), no solo la posición final,
+            // para que un pincho rápido no atraviese al conejo sin detectarse
+            boolean hitsRabbit = spike.spikeX + spike.getSpikeWidth() >= rabbitX &&
+                    spike.spikeX <= rabbitX + rabbit.getWidth() &&
+                    spike.spikeY + spike.getSpikeHeight() >= rabbitY &&
+                    previousY <= rabbitY + rabbit.getHeight();
+            if (hitsRabbit){
+                life--;
+                spike.resetPosition();
+                if (life <= 0){
+                    life = 0;
+                    gameOver = true;
                     Intent intent = new Intent(context, GameOver.class);
                     intent.putExtra("points",points);
                     context.startActivity(intent);
                     ((Activity) context ).finish();
                 }
+            } else if (spike.spikeY + spike.getSpikeHeight() >= dHeight - ground.getHeight()){
+                points += 10;
+                Explosion explosion = new Explosion(context);
+                explosion.explosionX = spike.spikeX;
+                explosion.explosionY = spike.spikeY;
+                explosions.add(explosion);
+                spike.resetPosition();
             }
         }
 
@@ -133,7 +150,9 @@ public class GameView extends View {
         }
         canvas.drawRect(dWidth-200,30,dWidth-200+60*life,80,healthPaint);
         canvas.drawText(""+points,20,TEXT_SIZE,textPaint);
-        handler.postDelayed(runnable,UPDATE_MILIS);
+        if (!gameOver){
+            handler.postDelayed(runnable,UPDATE_MILIS);
+        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
