@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/restart"
-            android:contentDescription="Reiniciar"
+            android:contentDescription="@string/restart"
             android:onClick="restart"/>
         <View
             android:layout_width="1dp"
@@ -22,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/exit"
-            android:contentDescription="Salir"
+            android:contentDescription="@string/exit"
             android:onClick="exit"/>
     </LinearLayout>
     <LinearLayout
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ivNewHighest"
             android:src="@drawable/new_highest"
-            android:contentDescription="Nuevo récord"
+            android:contentDescription="@string/new_record"
             android:visibility="gone"/>
         <TableLayout
             android:layout_width="wrap_content"
@@ -46,13 +47,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Puntuacion: "
+                    android:text="@string/score"
                     android:textSize="24sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvPoints"
-                    android:text="50"
+                    tools:text="50"
                     android:textSize="50sp"
                     android:textColor="@android:color/holo_green_dark"/>
             </TableRow>
@@ -61,14 +62,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Puntuacion mas alta: "
+                android:text="@string/highest"
                 android:textSize="24sp"
                 android:layout_gravity="center|right"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvHighest"
-                android:text="100"
+                tools:text="100"
                 android:textSize="24sp"
                 android:textColor="@android:color/holo_orange_dark"/>
             </TableRow>

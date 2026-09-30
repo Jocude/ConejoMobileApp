@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">ConejoJorge</string>
+    <string name="app_name">Conejo Jorge</string>
+
+    <!-- Pantalla de inicio -->
+    <string name="start">Jugar</string>
+    <string name="game_title">Save the Bunny</string>
+    <string name="rabbit">Conejo</string>
+
+    <!-- Partida -->
+    <string name="paused">Pausa</string>
+    <string name="tap_to_continue">Toca para continuar</string>
+    <string name="exit_game_title">¿Salir de la partida?</string>
+    <string name="exit_game_message">Perderás la puntuación de esta partida.</string>
+    <string name="exit_game_confirm">Salir</string>
+    <string name="exit_game_cancel">Seguir jugando</string>
+
+    <!-- Game Over -->
+    <string name="score">Puntuación:</string>
+    <string name="highest">Puntuación más alta:</string>
+    <string name="new_record">¡Nuevo récord!</string>
+    <string name="restart">Jugar otra vez</string>
+    <string name="exit">Salir</string>
 </resources>

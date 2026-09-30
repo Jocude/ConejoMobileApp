@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Bunny Jorge</string>
+
+    <string name="start">Play</string>
+    <string name="game_title">Save the Bunny</string>
+    <string name="rabbit">Bunny</string>
+
+    <string name="paused">Paused</string>
+    <string name="tap_to_continue">Tap to continue</string>
+    <string name="exit_game_title">Quit the game?</string>
+    <string name="exit_game_message">You will lose this game\'s score.</string>
+    <string name="exit_game_confirm">Quit</string>
+    <string name="exit_game_cancel">Keep playing</string>
+
+    <string name="score">Score:</string>
+    <string name="highest">High score:</string>
+    <string name="new_record">New high score!</string>
+    <string name="restart">Play again</string>
+    <string name="exit">Exit</string>
+</resources>

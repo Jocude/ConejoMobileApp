@@ -24,14 +24,17 @@ Descarga el APK desde la sección [**Releases**](https://github.com/Jocude/Conej
 
 | Mecánica | Descripción |
 |---|---|
-| **Control del conejo** | Desliza el dedo en la parte inferior de la pantalla para mover al conejo horizontalmente |
-| **Picos** | Caen desde la parte superior en posiciones y velocidades aleatorias (3 picos simultáneos; cada uno tarda entre 1,5 y 3 s en cruzar la pantalla, igual en cualquier móvil) |
+| **Control del conejo** | Desliza el dedo en la mitad inferior de la pantalla para mover al conejo horizontalmente |
+| **Picos** | Caen desde la parte superior en posiciones y velocidades aleatorias (cada uno tarda entre 1,5 y 3 s en cruzar la pantalla, igual en cualquier móvil). Solo golpea su cuerpo redondo: las puntas no cuentan |
+| **Dificultad** | Empiezan 3 picos; cada 300 puntos cae uno más (hasta 6) y la velocidad sube poco a poco hasta el doble a los 1500 puntos |
 | **Puntuación** | Cada pico que toca el suelo sin golpear al conejo suma **+10 puntos** |
-| **Vidas** | El jugador empieza con **3 vidas** (barra verde → amarilla → roja) |
+| **Vidas** | El jugador empieza con **3 vidas** (casillas verde → amarilla → roja) |
+| **Sonido y vibración** | Golpe con vibración, sonido suave al caer cada pico y melodía de Game Over |
 | **Explosiones** | Cada vez que un pico llega al suelo se reproduce una animación de explosión |
-| **Game Over** | Al perder las 3 vidas se navega a la pantalla de resultados |
+| **Game Over** | Al perder las 3 vidas se muestra la puntuación; «Jugar otra vez» empieza una partida nueva directamente |
 | **Récord** | La puntuación más alta se guarda localmente con `SharedPreferences` |
-| **Pausa** | Si sales de la app, la partida se congela y continúa al volver |
+| **Pausa** | Botón arriba en el centro; también al salir de la app o bajar las notificaciones. El botón atrás pregunta antes de abandonar la partida |
+| **Idiomas** | Español e inglés, según el idioma del móvil |
 
 ---
 
@@ -46,14 +49,18 @@ ConejoMobileApp/
 │   │   │   │   ├── MainActivity.kt       # Pantalla de inicio; aloja la partida y la pausa/reanuda
 │   │   │   │   ├── GameView.kt           # Motor del juego (bucle, lógica, dibujo y control táctil)
 │   │   │   │   ├── GameSprites.kt        # Imágenes del juego, cargadas una sola vez
+│   │   │   │   ├── GameAudio.kt          # Efectos de sonido y vibración
+│   │   │   │   ├── Difficulty.kt         # Dificultad progresiva según los puntos
 │   │   │   │   ├── Spike.kt              # Pico: posición, velocidad, animación y colisión
 │   │   │   │   ├── Explosion.kt          # Animación de explosión
 │   │   │   │   └── GameOver.kt           # Pantalla de resultados y récord
 │   │   │   ├── res/
 │   │   │   │   ├── layout/               # activity_main.xml, game_over.xml
-│   │   │   │   └── drawable/             # Sprites: conejo, picos, explosiones, fondo, suelo…
+│   │   │   │   ├── drawable/             # Sprites: conejo, picos, explosiones, fondo, suelo…
+│   │   │   │   ├── raw/                  # Sonidos (golpe, pop, Game Over)
+│   │   │   │   └── values/, values-en/   # Textos en español e inglés
 │   │   │   └── AndroidManifest.xml
-│   │   └── test/.../SpikeTest.kt         # Tests de velocidad y colisiones
+│   │   └── test/.../                     # SpikeTest y DifficultyTest
 │   ├── build.gradle.kts
 │   └── settings.gradle.kts
 └── Documentacion/
@@ -70,13 +77,19 @@ Núcleo del juego. Extiende `View` y usa `Canvas`. El bucle va con `Choreographe
 - **Actualiza** la lógica según el tiempo real transcurrido (misma velocidad en cualquier móvil).
 - **Dibuja** fondo, suelo, conejo, picos, explosiones, puntuación y barra de vida.
 
-Además detecta las colisiones, gestiona las vidas y el control táctil, y respeta las barras del sistema (el suelo queda por encima de la barra de navegación).
+Todo se escala según el ancho de la pantalla, así que el juego se ve igual en cualquier móvil. Además detecta las colisiones, gestiona las vidas, la pausa y el control táctil, y respeta las barras del sistema (el suelo queda por encima de la barra de navegación).
 
 #### `GameSprites.kt`
 Carga todas las imágenes una sola vez por partida; las comparten todos los picos y explosiones.
 
+#### `Difficulty.kt`
+Calcula cuántos picos caen y a qué velocidad según la puntuación.
+
+#### `GameAudio.kt`
+Reproduce los efectos con `SoundPool` y vibra al recibir un golpe.
+
 #### `Spike.kt`
-Pico animado de 3 frames con posición X y velocidad aleatorias. Se reinicia al tocar el suelo o al conejo. Incluye `spikeHitsRabbit`, que comprueba todo el tramo recorrido en el frame para que un pico rápido no atraviese al conejo.
+Pico animado de 3 frames con posición X y velocidad aleatorias. Se reinicia al tocar el suelo o al conejo. Incluye `spikeHitsRabbit`, que comprueba el choque del cuerpo redondo del pico con el conejo en todo el tramo recorrido en el frame, para que un pico rápido no lo atraviese.
 
 #### `Explosion.kt`
 Animación de 3 frames que se muestra al impactar un pico contra el suelo.
@@ -122,7 +135,7 @@ El APK generado se encontrará en `app/build/outputs/apk/release/`. Los APK no s
 
 ## 🧪 Tests
 
-`SpikeTest` comprueba el rango de velocidades de los picos y la detección de colisiones:
+`SpikeTest` comprueba las velocidades y las colisiones de los picos, y `DifficultyTest` la dificultad progresiva:
 
 ```bash
 # Tests unitarios (JUnit)

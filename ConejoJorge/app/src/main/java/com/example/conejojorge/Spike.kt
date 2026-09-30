@@ -12,11 +12,12 @@ class Spike(private val random: Random) {
         private set
     private var frameTime = 0f
 
-    fun reset(screenWidth: Int, screenHeight: Int, spikeWidth: Int) {
-        x = random.nextInt((screenWidth - spikeWidth).coerceAtLeast(1)).toFloat()
-        y = -100f - random.nextInt(200)
+    /** Coloca el pincho por encima de la pantalla con posición y velocidad aleatorias. */
+    fun reset(screenWidth: Int, screenHeight: Int, spikeWidth: Float, spikeHeight: Float, speedMultiplier: Float = 1f) {
+        x = random.nextFloat() * (screenWidth - spikeWidth).coerceAtLeast(1f)
+        y = -spikeHeight - random.nextFloat() * screenHeight * START_SPREAD
         val fallSeconds = MIN_FALL_SECONDS + random.nextFloat() * (MAX_FALL_SECONDS - MIN_FALL_SECONDS)
-        velocity = screenHeight / fallSeconds
+        velocity = screenHeight / fallSeconds * speedMultiplier
     }
 
     fun animate(deltaSeconds: Float) {
@@ -28,23 +29,34 @@ class Spike(private val random: Random) {
     }
 
     companion object {
-        // Tiempo (en segundos) que tarda un pincho en recorrer toda la pantalla
+        // Tiempo (en segundos) que tarda un pincho en recorrer toda la pantalla, sin contar la dificultad
         const val MIN_FALL_SECONDS = 1.5f
         const val MAX_FALL_SECONDS = 3f
+        /** Hasta qué altura por encima de la pantalla puede aparecer (fracción del alto). */
+        const val START_SPREAD = 0.1f
         const val FRAME_SECONDS = 0.033f
         const val FRAME_COUNT = 3
+        /** Radio del cuerpo redondo del pincho respecto a su ancho: las puntas no cuentan como golpe. */
+        const val BODY_RADIUS_RATIO = 0.33f
     }
 }
 
 /**
- * Indica si un pincho ha tocado al conejo en este frame. Se comprueba todo el tramo recorrido
- * (desde [spikeTopBefore] hasta [spikeBottomAfter]) para que un pincho rápido no atraviese al conejo.
+ * Indica si el cuerpo redondo de un pincho ha tocado la caja del conejo en este frame.
+ * Se comprueba todo el tramo recorrido (el centro va de [centerYBefore] a [centerYAfter])
+ * para que un pincho rápido no atraviese al conejo sin detectarse.
  */
 fun spikeHitsRabbit(
-    spikeX: Float, spikeWidth: Int, spikeTopBefore: Float, spikeBottomAfter: Float,
-    rabbitX: Float, rabbitY: Float, rabbitWidth: Int, rabbitHeight: Int,
-): Boolean =
-    spikeX + spikeWidth >= rabbitX &&
-        spikeX <= rabbitX + rabbitWidth &&
-        spikeBottomAfter >= rabbitY &&
-        spikeTopBefore <= rabbitY + rabbitHeight
+    centerX: Float, centerYBefore: Float, centerYAfter: Float, radius: Float,
+    left: Float, top: Float, right: Float, bottom: Float,
+): Boolean {
+    val dx = maxOf(left - centerX, 0f, centerX - right)
+    val segmentTop = minOf(centerYBefore, centerYAfter)
+    val segmentBottom = maxOf(centerYBefore, centerYAfter)
+    val dy = when {
+        segmentBottom < top -> top - segmentBottom
+        segmentTop > bottom -> segmentTop - bottom
+        else -> 0f
+    }
+    return dx * dx + dy * dy <= radius * radius
+}

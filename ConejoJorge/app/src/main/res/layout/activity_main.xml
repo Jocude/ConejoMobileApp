@@ -11,12 +11,15 @@
     android:background="#e7dfc2"
     android:gravity="center">
   <ImageView
-      android:layout_width="wrap_content"
+      android:layout_width="300dp"
       android:layout_height="wrap_content"
+      android:adjustViewBounds="true"
+      android:contentDescription="@string/game_title"
       app:srcCompat ="@drawable/game_title"/>
   <ImageView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:contentDescription="@string/rabbit"
       app:srcCompat = "@drawable/rabbit"
       android:layout_marginTop="40dp"
       android:layout_marginBottom="40dp"/>
@@ -24,7 +27,7 @@
       android:id="@+id/btnStart"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Start"
+      android:text="@string/start"
       android:textSize="32sp"
       android:textColor="@color/white"
       android:backgroundTint="#bb8044"

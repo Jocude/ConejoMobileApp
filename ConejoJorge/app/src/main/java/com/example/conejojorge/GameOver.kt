@@ -1,6 +1,7 @@
 package com.example.conejojorge
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -24,10 +25,18 @@ class GameOver : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.tvPoints).text = points.toString()
         findViewById<TextView>(R.id.tvHighest).text = highest.toString()
+
+        if (savedInstanceState == null) {
+            MediaPlayer.create(this, R.raw.game_over)?.apply {
+                setOnCompletionListener { it.release() }
+                start()
+            }
+        }
     }
 
+    /** Empieza directamente una partida nueva, sin pasar por el menú. */
     fun restart(view: View) {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_START_GAME, true))
         finish()
     }
 
