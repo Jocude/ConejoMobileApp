@@ -1,4 +1,4 @@
-package com.example.conejojorge
+package com.jocude.conejojorge
 
 import kotlin.random.Random
 

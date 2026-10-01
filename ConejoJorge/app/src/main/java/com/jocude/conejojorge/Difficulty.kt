@@ -1,4 +1,4 @@
-package com.example.conejojorge
+package com.jocude.conejojorge
 
 /** Dificultad progresiva: con más puntos caen más pinchos y más rápido. */
 object Difficulty {

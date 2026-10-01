@@ -1,4 +1,4 @@
-package com.example.conejojorge
+package com.jocude.conejojorge
 
 /** Animación de explosión cuando un pincho llega al suelo. */
 class Explosion(val x: Float, val y: Float) {

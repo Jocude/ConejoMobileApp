@@ -23,7 +23,7 @@ fun signingValue(key: String, env: String): String? = System.getenv(env) ?: sign
 val releaseStoreFile = signingValue("storeFile", "CONEJO_STORE_FILE")
 
 android {
-    namespace = "com.example.conejojorge"
+    namespace = "com.jocude.conejojorge"
     compileSdk = 37
 
     defaultConfig {
